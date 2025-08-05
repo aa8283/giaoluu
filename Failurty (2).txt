@@ -189,65 +189,111 @@ wait(1)
 
 
 
-local Ui22 = Instance.new("ScreenGui")
-Ui22.Name = "Ui22"
-Ui22.Parent = game.CoreGui
-Ui22.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Ui22.ResetOnSpawn = false
+local player = game.Players.LocalPlayer
 
--- Nút Show/Hide UI
-local Image3 = Instance.new("TextButton")
-Image3.Name = "Image3"
-Image3.Parent = Ui22
-Image3.Active = true
-Image3.Draggable = true
-Image3.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- màu nền dịu
-Image3.BackgroundTransparency = 0.3
-Image3.Size = UDim2.new(0, 100, 0, 50)
-Image3.Position = UDim2.new(1, -150, 0, 20) -- lệch trái một chút
-Image3.Text = "Show UI"
-Image3.TextColor3 = Color3.fromRGB(255, 255, 255) -- chữ trắng
-Image3.TextScaled = false
-Image3.TextSize = 16 -- hoặc 12 nếu muốn nhỏ hơn nữa
-Image3.Font = Enum.Font.Gotham
-Image3.BorderSizePixel = 0
+local playerGuii = player:WaitForChild("PlayerGui")
 
--- Bo góc
-local Ui2corner = Instance.new("UICorner")
-Ui2corner.CornerRadius = UDim.new(0, 15)
-Ui2corner.Parent = Image3
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "khen.cc"
+screenGui.Parent = playerGuii
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
 
--- Viền trắng nhẹ
-local UIStroke = Instance.new("UIStroke")
-UIStroke.Color = Color3.fromRGB(255, 255, 255)
-UIStroke.Thickness = 2
-UIStroke.Parent = Image3
+local frame = Instance.new("Frame")
+frame.Parent = screenGui
+frame.Position = UDim2.new(1, -90, 0, 10)
+frame.Size = UDim2.new(0, 60, 0, 50)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Active = true -- Required for dragging
 
--- Hiệu ứng hover
-Image3.MouseEnter:Connect(function()
-    Image3.BackgroundTransparency = 0.1
-    UIStroke.Color = Color3.fromRGB(200, 200, 200)
-end)
+local frameCorner = Instance.new("UICorner")
+frameCorner.CornerRadius = UDim.new(0, 8)
+frameCorner.Parent = frame
 
-Image3.MouseLeave:Connect(function()
-    Image3.BackgroundTransparency = 0.3
-    UIStroke.Color = Color3.fromRGB(255, 255, 255)
-end)
 
--- Khi bấm nút
-Image3.MouseButton1Click:Connect(function()
-    Open = not Open
-    Library:Toggle(Open)
+local frameShadow = Instance.new("UIStroke")
+frameShadow.Parent = frame
+frameShadow.Color = Color3.fromRGB(0, 0, 0)
+frameShadow.Thickness = 2
+frameShadow.Transparency = 0.7
 
-    Image3.TextColor3 = Color3.fromRGB(255, 255, 255) -- giữ chữ trắng
+local button = Instance.new("TextButton")
+button.Parent = frame
+button.Position = UDim2.new(0.5, -22, 0.5, -12) -- Centered better
+button.Size = UDim2.new(0, 44, 0, 24) -- Slightly larger for better touch
+button.Text = "Menu"
+button.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 15
+button.BorderSizePixel = 0
 
-    if Open then
-        Image3.Text = "Hide UI"
-        Image3.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    else
-        Image3.Text = "Show UI"
-        Image3.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- xám nhẹ
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 8)
+buttonCorner.Parent = button
+
+-- Add hover effect
+local buttonHover = Instance.new("UIStroke")
+buttonHover.Parent = button
+buttonHover.Color = Color3.fromRGB(255, 255, 255)
+buttonHover.Thickness = 1
+buttonHover.Transparency = 1
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+-- Handle both mouse and touch input
+local function startDrag(input)
+    dragging = true
+    dragStart = input.Position
+    startPos = frame.Position
+end
+
+local function updateDrag(input)
+    if dragging then
+        local delta = input.Position - dragStart
+        local newX = math.clamp(startPos.X.Offset + delta.X, 0, playerGui.AbsoluteSize.X - frame.Size.X.Offset)
+        local newY = math.clamp(startPos.Y.Offset + delta.Y, 0, playerGui.AbsoluteSize.Y - frame.Size.Y.Offset)
+        frame.Position = UDim2.new(0, newX, 0, newY)
     end
+end
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+       input.UserInputType == Enum.UserInputType.Touch then
+        startDrag(input)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseMovement or 
+        input.UserInputType == Enum.UserInputType.Touch) and dragging then
+        updateDrag(input)
+    end
+end)
+
+frame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+       input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+-- Button effects
+button.MouseEnter:Connect(function()
+    buttonHover.Transparency = 0.8
+    button.BackgroundColor3 = Color3.fromRGB(0, 140, 235)
+end)
+
+button.MouseLeave:Connect(function()
+    buttonHover.Transparency = 1
+    button.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+end)
+
+button.MouseButton1Click:Connect(function()
+    Library:Toggle()
 end)
 
 
