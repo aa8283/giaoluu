@@ -1,9 +1,10 @@
 -- i hate girls 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/aa8283/i/refs/heads/main/Protected_2547730226887233.txt"))()
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/khenn791/script-khen/refs/heads/main/larplarpbypasser.txt"))()
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/aa8283/i/refs/heads/main/Protected_2547730226887233.txt"))()
 -----
 
 getgenv().venus = {
@@ -184,123 +185,76 @@ local ThemeManager = loadstring(game:HttpGet(repo .. 'nini/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'nini/SaveManager.lua'))()
 
 
-Library:Notify('khen.cc and last upd')
+Library:Notify('khen.cc')
 wait(1)
 
 
+local Ui22 = Instance.new("ScreenGui")
+Ui22.Name = "Ui22"
+Ui22.Parent = game.CoreGui
+Ui22.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Ui22.ResetOnSpawn = false
 
-local player = game.Players.LocalPlayer
+-- Nút Show/Hide UI
+local Image3 = Instance.new("TextButton")
+Image3.Name = "Image3"
+Image3.Parent = Ui22
+Image3.Active = true
+Image3.Draggable = true
+Image3.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- màu nền dịu
+Image3.BackgroundTransparency = 0.3
+Image3.Size = UDim2.new(0, 100, 0, 50)
+Image3.Position = UDim2.new(1, -150, 0, 20) -- lệch trái một chút
+Image3.Text = "Show UI"
+Image3.TextColor3 = Color3.fromRGB(200, 200, 200) -- chữ xám nhạt
+Image3.TextScaled = false
+Image3.TextSize = 16
+Image3.Font = Enum.Font.Gotham
+Image3.BorderSizePixel = 0
 
-local playerGuii = player:WaitForChild("PlayerGui")
+-- Bo góc
+local Ui2corner = Instance.new("UICorner")
+Ui2corner.CornerRadius = UDim.new(0, 15)
+Ui2corner.Parent = Image3
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "khen.cc"
-screenGui.Parent = playerGuii
-screenGui.ResetOnSpawn = false
-screenGui.IgnoreGuiInset = true
+-- Viền trắng nhẹ
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(255, 255, 255)
+UIStroke.Thickness = 2
+UIStroke.Parent = Image3
 
-local frame = Instance.new("Frame")
-frame.Parent = screenGui
-frame.Position = UDim2.new(1, -90, 0, 10)
-frame.Size = UDim2.new(0, 60, 0, 50)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-frame.BorderSizePixel = 0
-frame.Active = true -- Required for dragging
+-- Hiệu ứng hover
+Image3.MouseEnter:Connect(function()
+    Image3.BackgroundTransparency = 0.1
+    UIStroke.Color = Color3.fromRGB(200, 200, 200)
+    Image3.TextColor3 = Color3.fromRGB(255, 255, 255) -- sáng hơn khi hover
+end)
 
-local frameCorner = Instance.new("UICorner")
-frameCorner.CornerRadius = UDim.new(0, 8)
-frameCorner.Parent = frame
+Image3.MouseLeave:Connect(function()
+    Image3.BackgroundTransparency = 0.3
+    UIStroke.Color = Color3.fromRGB(255, 255, 255)
+    Image3.TextColor3 = Color3.fromRGB(200, 200, 200) -- quay lại xám nhạt
+end)
 
+-- Khi bấm nút
+Image3.MouseButton1Click:Connect(function()
+    Open = not Open
+    Library:Toggle(Open)
 
-local frameShadow = Instance.new("UIStroke")
-frameShadow.Parent = frame
-frameShadow.Color = Color3.fromRGB(0, 0, 0)
-frameShadow.Thickness = 2
-frameShadow.Transparency = 0.7
-
-local button = Instance.new("TextButton")
-button.Parent = frame
-button.Position = UDim2.new(0.5, -22, 0.5, -12) -- Centered better
-button.Size = UDim2.new(0, 44, 0, 24) -- Slightly larger for better touch
-button.Text = "Menu"
-button.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-button.TextColor3 = Color3.fromRGB(255, 255, 255)
-button.Font = Enum.Font.SourceSansBold
-button.TextSize = 15
-button.BorderSizePixel = 0
-
-local buttonCorner = Instance.new("UICorner")
-buttonCorner.CornerRadius = UDim.new(0, 8)
-buttonCorner.Parent = button
-
--- Add hover effect
-local buttonHover = Instance.new("UIStroke")
-buttonHover.Parent = button
-buttonHover.Color = Color3.fromRGB(255, 255, 255)
-buttonHover.Thickness = 1
-buttonHover.Transparency = 1
-
-local dragging = false
-local dragStart = nil
-local startPos = nil
-
--- Handle both mouse and touch input
-local function startDrag(input)
-    dragging = true
-    dragStart = input.Position
-    startPos = frame.Position
-end
-
-local function updateDrag(input)
-    if dragging then
-        local delta = input.Position - dragStart
-        local newX = math.clamp(startPos.X.Offset + delta.X, 0, playerGui.AbsoluteSize.X - frame.Size.X.Offset)
-        local newY = math.clamp(startPos.Y.Offset + delta.Y, 0, playerGui.AbsoluteSize.Y - frame.Size.Y.Offset)
-        frame.Position = UDim2.new(0, newX, 0, newY)
+    if Open then
+        Image3.Text = "Hide UI"
+        Image3.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    else
+        Image3.Text = "Show UI"
+        Image3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     end
-end
-
-frame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-       input.UserInputType == Enum.UserInputType.Touch then
-        startDrag(input)
-    end
-end)
-
-frame.InputChanged:Connect(function(input)
-    if (input.UserInputType == Enum.UserInputType.MouseMovement or 
-        input.UserInputType == Enum.UserInputType.Touch) and dragging then
-        updateDrag(input)
-    end
-end)
-
-frame.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-       input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-    end
-end)
-
--- Button effects
-button.MouseEnter:Connect(function()
-    buttonHover.Transparency = 0.8
-    button.BackgroundColor3 = Color3.fromRGB(0, 140, 235)
-end)
-
-button.MouseLeave:Connect(function()
-    buttonHover.Transparency = 1
-    button.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-end)
-
-button.MouseButton1Click:Connect(function()
-    Library:Toggle()
 end)
 
 
 
 
 local Window = Library:CreateWindow({
-    Title = "Failurty.cc [khen.cc] v1.0.3",
+    Title = "Failurty.cc [khen.cc] v1.0.5",
     Center = true,
     AutoShow = true,
     Size = UDim2.new(0, 450, 0, 380)
@@ -309,6 +263,7 @@ local Window = Library:CreateWindow({
 local Tabs = {
         Main = Window:AddTab("Main"),
         Rage = Window:AddTab("Visuals"),
+        More = Window:AddTab("Buttons"),
         ["UI Settings"] = Window:AddTab("Configs")
     }
 
@@ -343,19 +298,19 @@ local tar = Tabs.Main:AddRightGroupbox("Target Strafe")
 
 local fov = Tabs.Main:AddLeftGroupbox("Fov")
 
-local cframe = Tabs.Rage:AddRightGroupbox("Cframe")
+local cframe = Tabs.More:AddRightGroupbox("Cframe")
 
 local visuals = Tabs.Rage:AddLeftGroupbox("Visuals")
 
 local esp = Tabs.Rage:AddLeftGroupbox("Esp")
 
-local anti = Tabs.Rage:AddLeftGroupbox("Desync")
+local anti = Tabs.Rage:AddRightGroupbox("Desync")
 
 local net = Tabs.Rage:AddLeftGroupbox("Fast Flags")
 
 local ant = Tabs.Rage:AddRightGroupbox("Anti Lock")
 
-local fly = Tabs.Rage:AddRightGroupbox("Fly Costumization")
+local walkspeed = Tabs.More:AddLeftGroupbox("Walk Speed")
 
 assist:AddToggle(
     "Enable Camlock",
@@ -706,49 +661,205 @@ air:AddInput(
     }
 )
 
+local cframeSpeed = 0
+local cframeGui = nil
+local isCFrameToggleEnabled = false
+local cframeConnection = nil
+
+-- Venus table structure
+if not venus then
+    venus = {}
+end
+if not venus.cframe then
+    venus.cframe = {
+        enabled = false,
+        speed = 0
+    }
+end
+
+local function createCFrameGUI()
+    if cframeGui then
+        cframeGui:Destroy()
+    end
+
+    cframeGui = Instance.new("ScreenGui")
+    cframeGui.Name = "CFrameSpeedGui"
+    cframeGui.Parent = game.CoreGui
+    cframeGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    cframeGui.ResetOnSpawn = false
+
+    -- Nút CFrame dịu mắt
+    local button = Instance.new("TextButton")
+    button.Name = "CFrameButton"
+    button.Parent = cframeGui
+    button.Active = true
+    button.Draggable = true
+    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    button.BackgroundTransparency = 0.3
+    button.Size = UDim2.new(0, 120, 0, 50)
+    button.Position = UDim2.new(1, -150, 0, 140)
+    button.Text = "CFrame OFF"
+    button.TextColor3 = Color3.fromRGB(180, 220, 200) -- xanh ngọc nhạt
+    button.TextScaled = false
+    button.TextSize = 14
+    button.Font = Enum.Font.Gotham
+    button.BorderSizePixel = 0
+
+    -- Bo góc
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 15)
+    buttonCorner.Parent = button
+
+    -- Viền xanh dịu
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Color = Color3.fromRGB(200, 255, 200)
+    buttonStroke.Thickness = 2
+    buttonStroke.Parent = button
+
+    -- CFrame functionality
+    local isEnabled = false
+
+    local function startCFrameMovement()
+        if cframeConnection then
+            cframeConnection:Disconnect()
+        end
+        
+        cframeConnection = game:GetService("RunService").Stepped:Connect(function()
+            if isEnabled and game.Players.LocalPlayer.Character then
+                local character = game.Players.LocalPlayer.Character
+                local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                local humanoid = character:FindFirstChild("Humanoid")
+                
+                if humanoidRootPart and humanoid then
+                    if humanoid.MoveDirection.Magnitude > 0 then
+                        humanoidRootPart.CFrame = humanoidRootPart.CFrame + (humanoid.MoveDirection * venus.cframe.speed)
+                    end
+                end
+            end
+        end)
+    end
+
+    local function stopCFrameMovement()
+        if cframeConnection then
+            cframeConnection:Disconnect()
+            cframeConnection = nil
+        end
+    end
+
+    local function UpdateButtonAppearance()
+        if isEnabled then
+            button.BackgroundColor3 = Color3.fromRGB(50, 100, 50) -- xanh lá dịu khi bật
+            button.Text = "CFrame ON"
+            buttonStroke.Color = Color3.fromRGB(150, 255, 150)
+        else
+            button.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- xám khi tắt
+            button.Text = "CFrame OFF"
+            buttonStroke.Color = Color3.fromRGB(200, 255, 200)
+        end
+    end
+
+    -- Click toggle
+    button.MouseButton1Click:Connect(function()
+        isEnabled = not isEnabled
+        venus.cframe.enabled = isEnabled
+        
+        if isEnabled then
+            startCFrameMovement()
+        else
+            stopCFrameMovement()
+        end
+        
+        UpdateButtonAppearance()
+    end)
+
+    -- Hover
+    button.MouseEnter:Connect(function()
+        button.BackgroundTransparency = 0.1
+        button.TextColor3 = Color3.fromRGB(220, 255, 230) -- sáng hơn khi hover
+        if isEnabled then
+            buttonStroke.Color = Color3.fromRGB(180, 255, 180)
+        else
+            buttonStroke.Color = Color3.fromRGB(180, 240, 200)
+        end
+    end)
+
+    button.MouseLeave:Connect(function()
+        button.BackgroundTransparency = 0.3
+        button.TextColor3 = Color3.fromRGB(180, 220, 200) -- quay về dịu
+        UpdateButtonAppearance()
+    end)
+
+    -- Initial
+    UpdateButtonAppearance()
+end
+
+-- Phím tăng giảm tốc
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.LeftBracket then
+        venus.cframe.speed = math.max(0, venus.cframe.speed - 0.5)
+        print("CFrame Speed: " .. venus.cframe.speed)
+        
+    elseif input.KeyCode == Enum.KeyCode.RightBracket then
+        venus.cframe.speed = math.min(50, venus.cframe.speed + 0.5)
+        print("CFrame Speed: " .. venus.cframe.speed)
+    end
+end)
+
+-- Linoria Integration
 cframe:AddToggle(
     "Enable cframe",
     {
-        Text = "cframe",
+        Text = "CFrame Speed GUI",
         Default = false,
-        Tooltip = "Enable CFrame Speed",
+        Tooltip = "Show/Hide",
         Callback = function(state)
-            venus.cframe.enabled = state
-            if venus.cframe.enabled then
-                -- If CFrame is enabled, start moving the character with speed
-                while venus.cframe.enabled do
-                    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * venus.cframe.speed
-                    end
-                    game:GetService("RunService").Stepped:Wait()
+            isCFrameToggleEnabled = state
+            if state then
+                createCFrameGUI()
+            else
+                if cframeGui then
+                    cframeGui:Destroy()
+                    cframeGui = nil
                 end
+                -- Stop movement when GUI is hidden
+                if cframeConnection then
+                    cframeConnection:Disconnect()
+                    cframeConnection = nil
+                end
+                venus.cframe.enabled = false
             end
         end
     }
 )
 
-cframe:AddSlider(
-    "cframe speed",
+cframe:AddInput(
+    "CFrame Speed Amount",
     {
-        Text = "CFrame Speed",
-        Default = 0,
-        Min = 0,
-        Max = 50,
-        Rounding = 1,
-        Compact = false,
-        Callback = function(Value)
-            venus.cframe.speed = Value
+        Default = tostring(venus.cframe.speed),
+        Numeric = true,
+        Finished = true,
+        Text = "Amount",
+        Tooltip = "Speed",
+        Placeholder = "25",
+        Callback = function(value)
+            venus.cframe.speed = tonumber(value) or venus.cframe.speed
+            cframeSpeed = venus.cframe.speed
         end
     }
 )
 
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.LeftBracket then
-        venus.cframe.speed = venus.cframe.speed + 0.01
-        print("Speed: " .. venus.cframe.speed)
-    elseif input.KeyCode == Enum.KeyCode.RightBracket then
-        venus.cframe.speed = venus.cframe.speed - 0.01
-        print("Speed: " .. venus.cframe.speed)
+
+-- Cleanup when player leaves
+game.Players.LocalPlayer.AncestryChanged:Connect(function()
+    if not game.Players.LocalPlayer.Parent then
+        if cframeConnection then
+            cframeConnection:Disconnect()
+        end
+        if cframeGui then
+            cframeGui:Destroy()
+        end
     end
 end)
 
@@ -1071,102 +1182,8 @@ game:GetService("RunService").heartbeat:Connect(function()
     end
 end)
 
--- Set up initial variables for fly speed and control
-local flySpeed = 50  -- Default speed
-local flying = false  -- Set to false
 
--- Get the player and character
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildOfClass("Humanoid")
-local userInputService = game:GetService("UserInputService")
 
--- Function to start flying
-local function startFlying()
-    if not flying then
-        flying = true
-        humanoid.PlatformStand = true
-        
-        local bodyGyro = Instance.new("BodyGyro", character.PrimaryPart)
-        local bodyVelocity = Instance.new("BodyVelocity", character.PrimaryPart)
-        bodyGyro.P = 9e4
-        bodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-        bodyGyro.CFrame = workspace.CurrentCamera.CFrame
-        bodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-
-        -- Update fly direction and speed based on camera orientation
-        local connection
-        connection = game:GetService("RunService").RenderStepped:Connect(function()
-            if flying then
-                bodyGyro.CFrame = workspace.CurrentCamera.CFrame
-                
-                local moveDirection = Vector3.new(0, 0, 0)
-                if humanoid.MoveDirection.Magnitude > 0 then
-                    moveDirection = workspace.CurrentCamera.CFrame.LookVector * humanoid.MoveDirection.Magnitude
-                end
-                
-                local verticalVelocity = 0
-                if userInputService:IsKeyDown(Enum.KeyCode.Space) then
-                    verticalVelocity = flySpeed -- Ascend
-                elseif userInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
-                    verticalVelocity = -flySpeed -- Descend
-                end
-                
-                bodyVelocity.Velocity = moveDirection * flySpeed + Vector3.new(0, verticalVelocity, 0)
-                humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
-            else
-                bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Stop movement when not flying
-                connection:Disconnect() -- Disconnect the RenderStepped connection
-            end
-        end)
-    end
-end
-
--- Function to stop flying
-local function stopFlying()
-    if flying then
-        flying = false
-        humanoid.PlatformStand = false
-        for _, v in pairs(character.PrimaryPart:GetChildren()) do
-            if v:IsA("BodyGyro") or v:IsA("BodyVelocity") then
-                v:Destroy()
-            end
-        end
-    end
-end
-
--- Toggle button setup
-fly:AddToggle(
-    "Enable Fly",
-    {
-        Text = "Enable Fly",
-        Default = false,
-        Tooltip = "Enable or disable flying",
-        Callback = function(state)
-            if state then
-                startFlying()
-            else
-                stopFlying()
-            end
-        end
-    }
-)
-
--- Slider for adjusting fly speed
-fly:AddSlider(
-    "Fly Speed",
-    {
-        Text = "Adjust Fly Speed",
-        Default = 50,
-        Min = 0,
-        Max = 100,
-        Rounding = 1,
-        Compact = false,
-        Callback = function(value)
-            flySpeed = value  -- Update the fly speed with the slider value
-        end
-    }
-)
 
 local lplr = game.Players.LocalPlayer
 local camera = game:GetService("Workspace").CurrentCamera
@@ -1649,7 +1666,182 @@ assist:AddToggle(
     }
 )
 
+-- Variables
+local speedd = 50
+local screenGui = nil
+local isToggleEnabled = false
+
+local function createWalkSpeedGUI()
+    if screenGui then
+        screenGui:Destroy()
+    end
+
+    screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "WalkSpeedGui"
+    screenGui.Parent = game.CoreGui
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.ResetOnSpawn = false
+
+    -- Nút WalkSpeed với style mới
+    local button = Instance.new("TextButton")
+    button.Name = "WalkSpeedButton"
+    button.Parent = screenGui
+    button.Active = true
+    button.Draggable = true
+    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- nền dịu
+    button.BackgroundTransparency = 0.3
+    button.Size = UDim2.new(0, 120, 0, 50)
+    button.Position = UDim2.new(1, -150, 0, 80)
+    button.Text = "WalkSpeed OFF"
+    button.TextColor3 = Color3.fromRGB(180, 220, 200) -- xanh ngọc nhạt dịu mắt
+    button.TextScaled = false
+    button.TextSize = 14
+    button.Font = Enum.Font.Gotham
+    button.BorderSizePixel = 0
+
+    -- Bo góc
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 15)
+    buttonCorner.Parent = button
+
+    -- Viền
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Color = Color3.fromRGB(200, 255, 200) -- viền xanh nhạt
+    buttonStroke.Thickness = 2
+    buttonStroke.Parent = button
+
+    -- WalkSpeed functionality
+    local humanoid
+    local isEnabled = false
+    local originalSpeed = 16
+
+    local function UpdateWalkSpeed()
+        if humanoid then
+            if isEnabled then
+                humanoid.WalkSpeed = speedd
+            else
+                humanoid.WalkSpeed = originalSpeed
+            end
+        end
+    end
+
+    local function UpdateButtonAppearance()
+        if isEnabled then
+            button.BackgroundColor3 = Color3.fromRGB(50, 120, 50) -- xanh lá khi bật
+            button.Text = "WalkSpeed ON"
+            buttonStroke.Color = Color3.fromRGB(150, 255, 180)
+        else
+            button.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- xám khi tắt
+            button.Text = "WalkSpeed OFF"
+            buttonStroke.Color = Color3.fromRGB(200, 255, 200)
+        end
+    end
+
+    local function onCharacterAdded(character)
+        humanoid = character:WaitForChild("Humanoid")
+        originalSpeed = humanoid.WalkSpeed
         
+        -- Monitor walkspeed changes
+        local connection
+        connection = humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+            if isEnabled and humanoid.WalkSpeed ~= speedd then
+                humanoid.WalkSpeed = speedd
+            elseif not isEnabled and humanoid.WalkSpeed ~= originalSpeed then
+                originalSpeed = humanoid.WalkSpeed
+            end
+        end)
+        
+        -- Clean up connection when character is removed
+        character.AncestryChanged:Connect(function()
+            if not character.Parent then
+                connection:Disconnect()
+            end
+        end)
+        
+        UpdateWalkSpeed()
+        UpdateButtonAppearance()
+    end
+
+    -- Connect character events
+    local player = game.Players.LocalPlayer
+    player.CharacterAdded:Connect(onCharacterAdded)
+
+    if player.Character then
+        onCharacterAdded(player.Character)
+    end
+
+    -- Button click to toggle on/off
+    button.MouseButton1Click:Connect(function()
+        isEnabled = not isEnabled
+        UpdateWalkSpeed()
+        UpdateButtonAppearance()
+    end)
+
+    -- Hover effects
+    button.MouseEnter:Connect(function()
+        button.BackgroundTransparency = 0.15
+        button.TextColor3 = Color3.fromRGB(220, 255, 230) -- sáng hơn chút khi hover
+        if isEnabled then
+            buttonStroke.Color = Color3.fromRGB(150, 255, 150)
+        else
+            buttonStroke.Color = Color3.fromRGB(150, 255, 180)
+        end
+    end)
+
+    button.MouseLeave:Connect(function()
+        button.BackgroundTransparency = 0.3
+        button.TextColor3 = Color3.fromRGB(180, 220, 200) -- quay về dịu
+        UpdateButtonAppearance()
+    end)
+end
+
+-- Linoria Integration (only if walkspeed variable exists)
+if walkspeed then
+    walkspeed:AddToggle(
+        "WalkSpeedToggle",
+        {
+            Text = "Walk Speed GUI",
+            Default = false,
+            Tooltip = "Show/Hide WalkSpeed GUI",
+            Callback = function(state)
+                isToggleEnabled = state
+                if state then
+                    createWalkSpeedGUI()
+                else
+                    if screenGui then
+                        screenGui:Destroy()
+                        screenGui = nil
+                    end
+                end
+            end
+        }
+    )
+
+    walkspeed:AddInput(
+        "WalkSpeedValue",
+        {
+            Default = "50",
+            Numeric = true,
+            Finished = false,
+            Text = "WalkSpeed Value",
+            Tooltip = "Set custom walkspeed value (default: 50)",
+            Placeholder = "Enter speed value",
+            Callback = function(value)
+                local num = tonumber(value)
+                if num and num > 0 and num <= 1000 then -- Add reasonable upper limit
+                    speedd = num
+                    print("WalkSpeed set to: " .. num) -- Debug output
+                else
+                    warn("Invalid walkspeed value. Must be between 1-1000")
+                end
+            end
+        }
+    )
+else
+    warn("lol")
+end
+
+
         
 local MenuGroup = Tabs['UI Settings']:AddRightGroupbox('Menu')
 
